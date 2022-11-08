@@ -16,24 +16,10 @@ func main() {
 	c := r.PathPrefix("/api/categories").Subrouter()
 
 	c.HandleFunc("/", category.GetCategories).Methods("GET")
-	c.HandleFunc("/create", category.StoreCategory).Methods("POST")
+	c.HandleFunc("/store", category.StoreCategory).Methods("POST")
 	c.HandleFunc("/{id}", category.GetCategoryById).Methods("GET")
-	c.HandleFunc("/{id}/edit", category.UpdateCategory).Methods("PUT")
-	c.HandleFunc("/{id}/delete", category.DeleteCategory).Methods("DELETE")
-
-	// category.GetCategories()
-	// c, err := category.GetCategoryById(1)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	
-	// c.Name = "updated category"
-	
-	// category.UpdateCategory(c)
-	// fmt.Println(category.GetCategoryById(1))
-	
-	// category.DeleteCategory(c)
-	// fmt.Println(category.GetCategoryById(1))
+	c.HandleFunc("/{id}", category.UpdateCategory).Methods("PUT")
+	c.HandleFunc("/{id}", category.DeleteCategory).Methods("DELETE")
 	
 	log.Fatal(http.ListenAndServe(":8000", r))
 }

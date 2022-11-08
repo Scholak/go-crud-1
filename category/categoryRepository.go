@@ -10,8 +10,9 @@ type CategoryRepository interface {
 	Index() ([]Category, error)
 	Store(category *Category) error
 	Show(id int) (*Category, error)
-	Update(id int, name string) error
+	Update(category *Category, id int) error
 	Delete(id int) error
+	CheckExistance(id int) bool
 }
 
 type categoryRepository struct {
@@ -44,10 +45,14 @@ func (c *categoryRepository) Show(id int) (*Category, error) {
 	return category, c.db.Find(&category, id).Error
 }
 
-func (c *categoryRepository) Update(id int, name string) error {
-	return c.db.Model(&Category{}).Where("id = ?", id).Update("name", name).Error
+func (c *categoryRepository) Update(category *Category, id int) error {
+	return c.db.Model(&Category{}).Where("id = ?", id).Updates(&category).Error
 }
 
 func (c *categoryRepository) Delete(id int) error {
 	return c.db.Delete(&Category{}, id).Error
+}
+
+func (c *categoryRepository) CheckExistance(id int) bool {
+	return c.db.First(&Category{}, id).RowsAffected > 0
 }
